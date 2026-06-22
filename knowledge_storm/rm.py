@@ -937,6 +937,8 @@ class TavilySearchRM(dspy.Retrieve):
         collected_results = []
 
         for query in queries:
+            if not query or not query.strip():
+                continue
             args = {
                 "max_results": self.k,
                 "include_raw_contents": self.include_raw_content,

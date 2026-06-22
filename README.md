@@ -16,10 +16,15 @@
 - [2024/09] We introduce collaborative STORM (Co-STORM) to support human-AI collaborative knowledge curation! [Co-STORM Paper](https://www.arxiv.org/abs/2408.15232) has been accepted to EMNLP 2024 main conference.
 
 - [2024/07] You can now install our package with `pip install knowledge-storm`!
+
 - [2024/07] We add `VectorRM` to support grounding on user-provided documents, complementing existing support of search engines (`YouRM`, `BingSearch`). (check out [#58](https://github.com/stanford-oval/storm/pull/58))
+
 - [2024/07] We release demo light for developers a minimal user interface built with streamlit framework in Python, handy for local development and demo hosting (checkout [#54](https://github.com/stanford-oval/storm/pull/54))
+
 - [2024/06] We will present STORM at NAACL 2024! Find us at Poster Session 2 on June 17 or check our [presentation material](assets/storm_naacl2024_slides.pdf). 
+
 - [2024/05] We add Bing Search support in [rm.py](knowledge_storm/rm.py). Test STORM with `GPT-4o` - we now configure the article generation part in our demo using `GPT-4o` model.
+
 - [2024/04] We release refactored version of STORM codebase! We define [interface](knowledge_storm/interface.py) for STORM pipeline and reimplement STORM-wiki (check out [`src/storm_wiki`](knowledge_storm/storm_wiki)) to demonstrate how to instantiate the pipeline. We provide API to support customization of different language models and retrieval/search integration.
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
@@ -35,8 +40,6 @@ While the system cannot produce publication-ready articles that often require a 
 
 **More than 70,000 people have tried our [live research preview](https://storm.genie.stanford.edu/). Try it out to see how STORM can help your knowledge exploration journey and please provide feedback to help us improve the system 🙏!**
 
-
-
 ## How STORM & Co-STORM works
 
 ### STORM
@@ -45,11 +48,13 @@ STORM breaks down generating long articles with citations into two steps:
 
 1. **Pre-writing stage**: The system conducts Internet-based research to collect references and generates an outline.
 2. **Writing stage**: The system uses the outline and references to generate the full-length article with citations.
-<p align="center">
-  <img src="assets/two_stages.jpg" style="width: 60%; height: auto;">
-</p>
+   
+   <p align="center">
+   <img src="assets/two_stages.jpg" style="width: 60%; height: auto;">
+   </p>
 
 STORM identifies the core of automating the research process as automatically coming up with good questions to ask. Directly prompting the language model to ask questions does not work well. To improve the depth and breadth of the questions, STORM adopts two strategies:
+
 1. **Perspective-Guided Question Asking**: Given the input topic, STORM discovers different perspectives by surveying existing articles from similar topics and uses them to control the question-asking process.
 2. **Simulated Conversation**: STORM simulates a conversation between a Wikipedia writer and a topic expert grounded in Internet sources to enable the language model to update its understanding of the topic and ask follow-up questions.
 
@@ -71,23 +76,24 @@ Both STORM and Co-STORM are implemented in a highly modular way using [dspy](htt
 
 ## Installation
 
-
 To install the knowledge storm library, use `pip install knowledge-storm`. 
 
 You could also install the source code which allows you to modify the behavior of STORM engine directly.
+
 1. Clone the git repository.
-    ```shell
-    git clone https://github.com/stanford-oval/storm.git
-    cd storm
-    ```
    
+   ```shell
+   git clone https://github.com/stanford-oval/storm.git
+   cd storm
+   ```
+
 2. Install the required packages.
+   
    ```shell
    conda create -n storm python=3.11
    conda activate storm
    pip install -r requirements.txt
    ```
-   
 
 ## API
 
@@ -134,6 +140,7 @@ runner = STORMWikiRunner(engine_args, lm_configs, rm)
 ```
 
 The `STORMWikiRunner` instance can be evoked with the simple `run` method:
+
 ```python
 topic = input('Topic: ')
 runner.run(
@@ -146,6 +153,7 @@ runner.run(
 runner.post_run()
 runner.summary()
 ```
+
 - `do_research`: if True, simulate conversations with difference perspectives to collect information about the topic; otherwise, load the results.
 - `do_generate_outline`: if True, generate an outline for the topic; otherwise, load the results.
 - `do_generate_article`: if True, generate an article for the topic based on the outline and the collected information; otherwise, load the results.
@@ -215,8 +223,6 @@ article = costorm_runner.generate_report()
 print(article)
 ```
 
-
-
 ## Quick Start with Example Scripts
 
 We provide scripts in our [examples folder](examples) as a quick start to run STORM and Co-STORM with different configurations.
@@ -244,6 +250,7 @@ ENCODER_API_TYPE="openai" # if using openai encoder
 **To run STORM with `gpt` family models with default configurations:**
 
 Run the following command.
+
 ```bash
 python examples/storm_examples/run_storm_wiki_gpt.py \
     --output-dir $OUTPUT_DIR \
@@ -269,7 +276,6 @@ python examples/costorm_examples/run_costorm_gpt.py \
     --retriever bing
 ```
 
-
 ## Customization of the Pipeline
 
 ### STORM
@@ -291,14 +297,17 @@ If you have installed the source code, you can customize Co-STORM based on your 
 2. Co-STORM introduces a collaborative discourse protocol, with its core function centered on turn policy management. We provide an example implementation of turn policy management through `DiscourseManager` in `knowledge_storm/collaborative_storm/engine.py`. It can be customized and further improved.
 
 ## Datasets
+
 To facilitate the study of automatic knowledge curation and complex information seeking, our project releases the following datasets:
 
 ### FreshWiki
+
 The FreshWiki Dataset is a collection of 100 high-quality Wikipedia articles focusing on the most-edited pages from February 2022 to September 2023. See Section 2.1 in [STORM paper](https://arxiv.org/abs/2402.14207) for more details.
 
 You can download the dataset from [huggingface](https://huggingface.co/datasets/EchoShao8899/FreshWiki) directly. To ease the data contamination issue, we archive the [source code](https://github.com/stanford-oval/storm/tree/NAACL-2024-code-backup/FreshWiki) for the data construction pipeline that can be repeated at future dates.
 
 ### WildSeek
+
 To study users’ interests in complex information seeking tasks in the wild, we utilized data collected from the web research preview to create the WildSeek dataset. We downsampled the data to ensure the diversity of the topics and the quality of the data. Each data point is a pair comprising a topic and the user’s goal for conducting deep search on the topic.  For more details, please refer to Section 2.2 and Appendix A of [Co-STORM paper](https://www.arxiv.org/abs/2408.15232).
 
 The WildSeek dataset is available [here](https://huggingface.co/datasets/YuchengJiang/WildSeek).
@@ -310,7 +319,9 @@ For STORM paper experiments, please switch to the branch `NAACL-2024-code-backup
 For Co-STORM paper experiments, please switch to the branch `EMNLP-2024-code-backup` (placeholder for now, will be updated soon).
 
 ## Roadmap & Contributions
+
 Our team is actively working on:
+
 1. Human-in-the-Loop Functionalities: Supporting user participation in the knowledge curation process.
 2. Information Abstraction: Developing abstractions for curated information to support presentation formats beyond the Wikipedia-style report.
 
@@ -319,6 +330,7 @@ If you have any questions or suggestions, please feel free to open an issue or p
 Contact person: [Yijia Shao](mailto:shaoyj@stanford.edu) and [Yucheng Jiang](mailto:yuchengj@stanford.edu)
 
 ## Acknowledgement
+
 We would like to thank Wikipedia for its excellent open-source content. The FreshWiki dataset is sourced from Wikipedia, licensed under the Creative Commons Attribution-ShareAlike (CC BY-SA) license.
 
 We are very grateful to [Michelle Lam](https://michelle123lam.github.io/) for designing the logo for this project and [Dekun Ma](https://dekun.me) for leading the UI development.
@@ -326,7 +338,9 @@ We are very grateful to [Michelle Lam](https://michelle123lam.github.io/) for de
 Thanks to Vercel for their support of [open-source software](https://storm.genie.stanford.edu)
 
 ## Citation
+
 Please cite our paper if you use this code or part of it in your work:
+
 ```bibtex
 @inproceedings{jiang-etal-2024-unknown,
     title = "Into the Unknown Unknowns: Engaged Human Learning through Participation in Language Model Agent Conversations",

@@ -289,6 +289,7 @@ class Retriever:
         self, query: Union[str, List[str]], exclude_urls: List[str] = []
     ) -> List[Information]:
         queries = query if isinstance(query, list) else [query]
+        queries = [q for q in queries if q and q.strip()]
         to_return = []
 
         def process_query(q):
